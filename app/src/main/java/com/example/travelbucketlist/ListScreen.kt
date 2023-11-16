@@ -25,8 +25,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,9 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MainScreen(name: String?) {
-
-    val bucketList = remember { mutableStateListOf<String>() }
+fun ListScreen(
+    name: String?,
+    bucketList: MutableList<String>,
+    selectedList: MutableState<Set<String>>
+) {
 
     Column(
         modifier = Modifier
@@ -63,7 +65,7 @@ fun MainScreen(name: String?) {
         )
         InputBox(bucketList)
         TextBox(name)
-        ListBox(bucketList)
+        ListBox(bucketList, selectedList)
     }
 }
 
@@ -168,9 +170,7 @@ fun InputBox(bucketList: MutableList<String>) {
 }
 
 @Composable
-fun ListBox(bucketList: MutableList<String>) {
-
-    val selectedList = remember { mutableStateOf(setOf<String>()) }
+fun ListBox(bucketList: MutableList<String>, selectedList: MutableState<Set<String>>) {
 
     LazyColumn {
         itemsIndexed(bucketList) { _, string ->

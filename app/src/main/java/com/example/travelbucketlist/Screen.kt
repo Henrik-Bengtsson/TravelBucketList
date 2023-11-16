@@ -1,8 +1,10 @@
 package com.example.travelbucketlist
 
 sealed class Screen(val route: String) {
-    object StartScreen : Screen("start_screen")
-    object MainScreen : Screen("main_screen")
+    object HomeScreen : Screen("home")
+    object ListScreen : Screen("list")
+
+    object SettingsScreen : Screen("settings")
 
     fun withArgs(vararg args: String): String {
         return buildString {

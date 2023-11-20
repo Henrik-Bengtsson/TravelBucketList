@@ -1,4 +1,4 @@
-package com.example.travelbucketlist
+package com.example.travelbucketlist.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,18 +44,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.travelbucketlist.R
+import com.example.travelbucketlist.viewModel.SettingsViewModel
 
 @Composable
 fun ListScreen(
     name: String?,
     bucketList: MutableList<String>,
-    selectedList: MutableState<Set<String>>
+    selectedList: MutableState<Set<String>>,
+    viewModel: SettingsViewModel
 ) {
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(Color.LightGray)
+            .background(viewModel.backgroundColor)
     ) {
         ImageCard(
             painter = painterResource(id = R.drawable.maldives),

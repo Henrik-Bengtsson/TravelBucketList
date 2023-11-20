@@ -1,4 +1,4 @@
-package com.example.travelbucketlist
+package com.example.travelbucketlist.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +25,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.travelbucketlist.viewModel.Screen
+import com.example.travelbucketlist.viewModel.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: SettingsViewModel) {
 
     var text by remember {
         mutableStateOf("")
@@ -39,7 +41,7 @@ fun HomeScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray)
+            .background(viewModel.backgroundColor)
     ) {
         Text(
             text = "Welcome",

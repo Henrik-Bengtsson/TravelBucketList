@@ -1,4 +1,4 @@
-package com.example.travelbucketlist
+package com.example.travelbucketlist.viewModel
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.BadgedBox
@@ -21,10 +21,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.example.travelbucketlist.model.BottomNavItem
+import com.example.travelbucketlist.view.HomeScreen
+import com.example.travelbucketlist.view.ListScreen
+import com.example.travelbucketlist.view.SettingsScreen
 
 @Composable
 fun Navigation(
     navController: NavHostController,
+    viewModel: SettingsViewModel,
     bucketList: MutableList<String>,
     selectedList: MutableState<Set<String>>
 ) {
@@ -32,7 +37,7 @@ fun Navigation(
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel)
         }
         composable(
             route = Screen.ListScreen.route + "/{name}",
@@ -44,10 +49,15 @@ fun Navigation(
                 }
             )
         ) { entry ->
-            ListScreen(name = entry.arguments?.getString("name"), bucketList, selectedList)
+            ListScreen(
+                name = entry.arguments?.getString("name"),
+                bucketList,
+                selectedList,
+                viewModel
+            )
         }
         composable("settings") {
-            SettingsScreen()
+            SettingsScreen(viewModel)
         }
     }
 }

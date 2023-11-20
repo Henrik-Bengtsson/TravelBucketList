@@ -1,4 +1,4 @@
-package com.example.travelbucketlist
+package com.example.travelbucketlist.viewModel
 
 sealed class Screen(val route: String) {
     object HomeScreen : Screen("home")

@@ -1,4 +1,4 @@
-package com.example.travelbucketlist
+package com.example.travelbucketlist.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

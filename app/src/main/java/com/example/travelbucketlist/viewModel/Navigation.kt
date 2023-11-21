@@ -7,7 +7,6 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,15 +28,14 @@ import com.example.travelbucketlist.view.SettingsScreen
 @Composable
 fun Navigation(
     navController: NavHostController,
-    viewModel: SettingsViewModel,
-    bucketList: MutableList<String>,
-    selectedList: MutableState<Set<String>>
+    settingsViewModel: SettingsViewModel,
+    listViewModel: ListViewModel,
 ) {
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navController = navController, viewModel)
+            HomeScreen(navController = navController, settingsViewModel, listViewModel)
         }
         composable(
             route = Screen.ListScreen.route + "/{name}",
@@ -48,16 +46,14 @@ fun Navigation(
                     nullable = true
                 }
             )
-        ) { entry ->
+        ) {
             ListScreen(
-                name = entry.arguments?.getString("name"),
-                bucketList,
-                selectedList,
-                viewModel
+                settingsViewModel,
+                listViewModel
             )
         }
         composable("settings") {
-            SettingsScreen(viewModel)
+            SettingsScreen(settingsViewModel)
         }
     }
 }

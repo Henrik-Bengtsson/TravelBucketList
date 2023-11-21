@@ -14,10 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,23 +21,24 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.travelbucketlist.viewModel.ListViewModel
 import com.example.travelbucketlist.viewModel.Screen
 import com.example.travelbucketlist.viewModel.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: SettingsViewModel) {
-
-    var text by remember {
-        mutableStateOf("")
-    }
+fun HomeScreen(
+    navController: NavController,
+    settingsViewModel: SettingsViewModel,
+    listViewModel: ListViewModel
+) {
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(viewModel.backgroundColor)
+            .background(settingsViewModel.backgroundColor)
     ) {
         Text(
             text = "Welcome",
@@ -50,10 +47,10 @@ fun HomeScreen(navController: NavController, viewModel: SettingsViewModel) {
             modifier = Modifier.padding(vertical = 25.dp)
         )
         OutlinedTextField(
-            value = text,
+            value = listViewModel.name,
             label = { Text("Enter your name", fontSize = 24.sp) },
             onValueChange = {
-                text = it
+                listViewModel.addName(it)
             },
             singleLine = true,
             shape = RoundedCornerShape(5.dp),
@@ -64,7 +61,7 @@ fun HomeScreen(navController: NavController, viewModel: SettingsViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = {
-                navController.navigate(Screen.ListScreen.withArgs(text))
+                navController.navigate(Screen.ListScreen.withArgs(listViewModel.name))
             },
             modifier = Modifier
                 .align(Alignment.End)

@@ -1,5 +1,6 @@
 package com.example.travelbucketlist.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,20 +41,19 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.travelbucketlist.R
+import com.example.travelbucketlist.viewModel.ListViewModel
 import com.example.travelbucketlist.viewModel.SettingsViewModel
 
 @Composable
 fun ListScreen(
-    name: String?,
-    bucketList: MutableList<String>,
-    selectedList: MutableState<Set<String>>,
-    viewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    listViewModel: ListViewModel
 ) {
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(viewModel.backgroundColor)
+            .background(settingsViewModel.backgroundColor)
     ) {
         ImageCard(
             painter = painterResource(id = R.drawable.maldives),
@@ -66,9 +61,9 @@ fun ListScreen(
             title = "My travel bucket list",
             modifier = Modifier.padding(15.dp)
         )
-        InputBox(bucketList)
-        TextBox(name)
-        ListBox(bucketList, selectedList)
+        InputBox(listViewModel)
+        TextBox(listViewModel)
+        ListBox(listViewModel)
     }
 }
 
@@ -116,7 +111,7 @@ fun ImageCard(
 }
 
 @Composable
-fun TextBox(name: String?) {
+fun TextBox(listViewModel: ListViewModel) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -124,7 +119,7 @@ fun TextBox(name: String?) {
             .padding(top = 20.dp)
     ) {
         Text(
-            text = "$name's bucket list",
+            text = "${listViewModel.name}'s bucket list",
             fontSize = 28.sp,
             textDecoration = TextDecoration.Underline,
             fontStyle = FontStyle.Italic,
@@ -135,10 +130,7 @@ fun TextBox(name: String?) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputBox(bucketList: MutableList<String>) {
-    var textFieldState by remember {
-        mutableStateOf("")
-    }
+fun InputBox(viewModel: ListViewModel) {
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -148,12 +140,12 @@ fun InputBox(bucketList: MutableList<String>) {
             .padding(top = 30.dp)
     ) {
         OutlinedTextField(
-            value = textFieldState,
+            value = viewModel.destination,
             label = {
                 Text("Enter destination")
             },
             onValueChange = {
-                textFieldState = it
+                viewModel.addDestination(it)
             },
             singleLine = true,
             shape = RoundedCornerShape(5.dp),
@@ -164,19 +156,20 @@ fun InputBox(bucketList: MutableList<String>) {
         )
         Spacer(modifier = Modifier.width(10.dp))
         Button(onClick = {
-            bucketList.add(textFieldState)
-            textFieldState = ""
+            viewModel.addListItem()
+            viewModel.clearDestinationInput()
         }) {
             Text("Add", fontSize = 18.sp)
         }
     }
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
-fun ListBox(bucketList: MutableList<String>, selectedList: MutableState<Set<String>>) {
+fun ListBox(viewModel: ListViewModel) {
 
     LazyColumn {
-        itemsIndexed(bucketList) { _, string ->
+        itemsIndexed(viewModel.destinationList) { _, listItem ->
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
@@ -185,20 +178,16 @@ fun ListBox(bucketList: MutableList<String>, selectedList: MutableState<Set<Stri
                     .padding(start = 40.dp)
             ) {
                 Checkbox(
-                    checked = selectedList.value.contains(string),
-                    onCheckedChange = { selected ->
-                        val currentSelected = selectedList.value.toMutableSet()
-                        if (selected) {
-                            currentSelected.add(string)
-                        } else {
-                            currentSelected.remove(string)
-                        }
-                        selectedList.value = currentSelected
+                    checked = listItem.selected,
+                    onCheckedChange = {
+                        listItem.selected = it
+                        viewModel.changeSelected(listItem)
+                        println(viewModel.destinationList.toList())
                     },
                     colors = CheckboxDefaults.colors(Color.Green)
                 )
                 Text(
-                    text = string,
+                    text = listItem.destination,
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

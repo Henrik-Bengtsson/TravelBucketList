@@ -15,12 +15,10 @@ class ListViewModel : ViewModel() {
     var destination: String by mutableStateOf("")
         private set
 
-    var selected: Boolean by mutableStateOf(false)
-
     var destinationList: MutableList<ListItem> = mutableStateListOf()
 
     fun addListItem() {
-        destinationList.add(ListItem(destination, selected))
+        destinationList.add(ListItem(destination, false))
     }
 
     fun addName(nameInput: String) {

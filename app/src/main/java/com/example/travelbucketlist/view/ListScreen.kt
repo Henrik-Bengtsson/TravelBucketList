@@ -1,6 +1,5 @@
 package com.example.travelbucketlist.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -164,7 +163,6 @@ fun InputBox(viewModel: ListViewModel) {
     }
 }
 
-@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ListBox(viewModel: ListViewModel) {
 
